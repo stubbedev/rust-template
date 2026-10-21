@@ -5,13 +5,17 @@ Starting point for new Rust projects: strict linting, dev recipes, and security 
 ## Start a project
 
 ```sh
-git clone git@github.com:stubbedev/rust-template.git myproject
-cd myproject
-rm -rf .git && git init -b main
+mkdir myproject && cd myproject
+git init -b main
+nix flake init -t github:stubbedev/rust-template
+git add -A
 # rename the crate
-sd 'rust-template' 'myproject' Cargo.toml Cargo.lock
-just check
+nix shell nixpkgs#sd -c sd 'rust-template' 'myproject' Cargo.toml Cargo.lock
+nix develop -c just check
 ```
+
+`git add -A` comes before the first nix command because a flake in a git
+repository only sees tracked files.
 
 ## Recipes
 

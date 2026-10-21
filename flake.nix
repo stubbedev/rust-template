@@ -26,5 +26,9 @@
         ./nix/shell.nix
         ./nix/treefmt.nix
       ];
+      flake.templates.default = {
+        path = ./.;
+        inherit ((nixpkgs.lib.importTOML ./Cargo.toml).package) description;
+      };
     };
 }

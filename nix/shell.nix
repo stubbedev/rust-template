@@ -13,7 +13,7 @@
         rust-analyzer
         clippy
         rustfmt
-        cargo-audit
+        cargo-deny
         cargo-nextest
         bacon
         just

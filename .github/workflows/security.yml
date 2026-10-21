@@ -56,7 +56,7 @@ jobs:
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
 
-  cargo-audit:
+  cargo-deny:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -64,10 +64,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Install cargo-audit
-        run: cargo install cargo-audit --locked
-      - name: Run cargo-audit
-        run: cargo audit
+      - uses: cachix/install-nix-action@448cde739abec1eaf0646249e3d25bb8d9bc7702 # v31.11.2
+      - name: Run cargo-deny
+        run: nix develop --command just deny
 
   dependency-review:
     runs-on: ubuntu-latest
@@ -81,4 +80,3 @@ jobs:
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
           fail-on-severity: critical
-          allow-licenses: BSD-2-Clause, BSD-3-Clause, MIT, MIT-0, Apache-2.0, MPL-2.0, ISC, Unicode-3.0, Unlicense, CC-BY-4.0

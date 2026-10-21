@@ -4,8 +4,8 @@
 default:
     @just --list
 
-# Run every release gate in order: fmt-check, lint, test, build.
-check: fmt-check lint test build
+# Run every release gate in order: fmt-check, lint, deny, test, build.
+check: fmt-check lint deny test build
 
 # Fail when any source is not rustfmt-formatted.
 fmt-check:
@@ -14,6 +14,10 @@ fmt-check:
 # Lint every target; the lint levels live in Cargo.toml's [lints].
 lint:
     cargo clippy --all-targets --locked -- -D warnings
+
+# Check advisories, licences, duplicate versions and sources against deny.toml.
+deny:
+    cargo deny --locked check
 
 # Run the test suite with cargo-nextest; profiles live in .config/nextest.toml.
 test:

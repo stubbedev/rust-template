@@ -81,7 +81,8 @@ them the toolchain and every dev tool) current.
 
 ## Linting
 
-`Cargo.toml`'s `[lints]` denies clippy's `all`, `pedantic` and `cargo` groups
+`Cargo.toml`'s `[workspace.lints]` (which the root crate opts into with
+`[lints] workspace = true`, as must every crate added to the workspace) denies clippy's `all`, `pedantic` and `cargo` groups
 plus a curated set of `restriction` and `nursery` lints, and `just lint`
 passes `-D warnings`, so every finding fails the build. The extra lints:
 

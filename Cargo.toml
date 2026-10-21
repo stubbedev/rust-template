@@ -17,7 +17,12 @@ codegen-units = 1
 panic = "abort"
 strip = true
 
-[lints.rust]
+[lints]
+workspace = true
+
+[workspace]
+
+[workspace.lints.rust]
 unsafe_code = "forbid"
 rust_2018_idioms = { level = "deny", priority = -1 }
 missing_debug_implementations = "deny"
@@ -28,7 +33,7 @@ unused_lifetimes = "deny"
 unused_macro_rules = "deny"
 unused_qualifications = "deny"
 
-[lints.clippy]
+[workspace.lints.clippy]
 all = { level = "deny", priority = -1 }
 pedantic = { level = "deny", priority = -1 }
 cargo = { level = "deny", priority = -1 }

@@ -8,6 +8,10 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs @ {
@@ -20,6 +24,7 @@
       imports = [
         ./nix/package.nix
         ./nix/shell.nix
+        ./nix/treefmt.nix
       ];
     };
 }

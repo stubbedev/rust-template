@@ -47,10 +47,6 @@
       });
 
     checks = {
-      fmt-check = justRecipe "fmt-check" {
-        cargoArtifacts = null;
-        nativeBuildInputs = [pkgs.rustfmt];
-      };
       lint = justRecipe "lint" {nativeBuildInputs = [pkgs.clippy];};
       deny = justRecipe "deny bans licenses sources" {nativeBuildInputs = [pkgs.cargo-deny];};
       test = justRecipe "test" {

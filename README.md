@@ -18,12 +18,12 @@ just check
 | Recipe | What it does |
 | --- | --- |
 | `just check` | Every release gate in order: fmt-check, lint, deny, test, build |
-| `just fmt-check` | Fail when a source is not rustfmt-formatted |
+| `just fmt-check` | Fail when any file is not formatted (`treefmt --ci`) |
 | `just lint` | `cargo clippy` against the strict levels in `Cargo.toml` |
 | `just deny` | `cargo deny check` against `deny.toml` |
 | `just test` | `cargo nextest run` (profiles in `.config/nextest.toml`) |
 | `just build` | Compile-check every target |
-| `just fmt` | Format every Rust source in place |
+| `just fmt` | Format every file in place (`treefmt`) |
 | `just watch [job]` | Rerun a bacon job on every save (`clippy-all` by default, or `nextest`, `run`, ...) |
 
 Every dev tool (the Rust toolchain the package builds with, rust-analyzer,
@@ -48,12 +48,15 @@ the crate's own code never rebuilds them.
 
 - `nix build` builds the release package; name, version and description
   come from `Cargo.toml`, dependencies from `Cargo.lock`
-- `nix flake check` runs `just fmt-check`, `just lint`, `just test` (nextest's
+- `nix flake check` runs treefmt's check, `just lint`, `just test` (nextest's
   `ci` profile) and `just deny bans licenses sources` in the sandbox, so the
   justfile stays the one definition of each gate. Advisories need network
   access the sandbox lacks, so the security workflow checks them instead.
 - `nix run` runs it
-- `nix fmt -- flake.nix nix` formats the nix files with alejandra
+- `nix fmt` (or `just fmt`) formats every file through treefmt
+  (`nix/treefmt.nix`): alejandra for Nix, rustfmt for Rust, taplo for TOML,
+  yamlfmt for YAML and `just --fmt` for the justfile, plus actionlint over the
+  workflows
 
 ## CI
 

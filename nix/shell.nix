@@ -1,5 +1,6 @@
 {
   perSystem = {
+    config,
     craneLib,
     pkgs,
     self',
@@ -14,6 +15,7 @@
         checks = self'.checks;
 
         packages = with pkgs; [
+          config.treefmt.build.wrapper
           rust-analyzer
           cargo-deny
           cargo-nextest
@@ -25,7 +27,5 @@
 
         env.RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
       };
-
-    formatter = pkgs.alejandra;
   };
 }

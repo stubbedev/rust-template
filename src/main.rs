@@ -3,7 +3,7 @@ fn main() {
 }
 
 fn greet(name: &str) -> String {
-    format!("hello, {name}")
+    return format!("hello, {name}");
 }
 
 #[cfg(test)]

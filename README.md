@@ -46,6 +46,8 @@ review gates pull requests. Dependabot keeps the crates and the workflows curren
 ## Linting
 
 `Cargo.toml`'s `[lints]` denies clippy's `all`, `pedantic` and `cargo` groups,
-plus `unwrap_used`, `expect_used`, `dbg_macro`, `print_stderr` and `todo`;
+plus `unwrap_used`, `expect_used`, `dbg_macro`, `print_stderr`, `todo` and
+`implicit_return`, so every function returns with an explicit `return`
+(`needless_return` is allowed because it contradicts `implicit_return`);
 `unsafe_code` is forbidden. `just lint` passes `-D warnings`, so every finding
 fails the build.

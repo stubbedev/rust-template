@@ -4,8 +4,8 @@
 default:
     @just --list
 
-# Run every release gate in order: fmt-check, lint, deny, test, build.
-check: fmt-check lint deny test build
+# Run every release gate in order: fmt-check, lint, deny, shear, test, build.
+check: fmt-check lint deny shear test build
 
 # Fail when any file is not formatted per nix/treefmt.nix.
 fmt-check:
@@ -18,6 +18,10 @@ lint:
 # Check deny.toml's policy: every check by default, or a subset, e.g. `just deny advisories`.
 deny *checks:
     cargo deny --locked check {{ checks }}
+
+# Fail on dependencies no target uses.
+shear:
+    cargo shear --locked --deny-warnings --check-test-targets
 
 # Run the test suite with cargo-nextest; profiles live in .config/nextest.toml.
 test:

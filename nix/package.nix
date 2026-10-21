@@ -49,6 +49,10 @@
     checks = {
       lint = justRecipe "lint" {nativeBuildInputs = [pkgs.clippy];};
       deny = justRecipe "deny bans licenses sources" {nativeBuildInputs = [pkgs.cargo-deny];};
+      shear = justRecipe "shear" {
+        cargoArtifacts = null;
+        nativeBuildInputs = [pkgs.cargo-shear];
+      };
       test = justRecipe "test" {
         NEXTEST_PROFILE = "ci";
         nativeBuildInputs = [pkgs.cargo-nextest];

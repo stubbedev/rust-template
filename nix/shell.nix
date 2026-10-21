@@ -19,6 +19,7 @@
           rust-analyzer
           cargo-deny
           cargo-nextest
+          cargo-shear
           bacon
           just
           git

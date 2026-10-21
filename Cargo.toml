@@ -1,0 +1,29 @@
+[package]
+name = "rust-template"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.98.1"
+description = "Starting point for new Rust projects"
+license = "MIT"
+repository = "https://github.com/stubbedev/rust-template"
+publish = false
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true
+
+[lints.rust]
+unsafe_code = "forbid"
+missing_debug_implementations = "deny"
+unused_qualifications = "deny"
+
+[lints.clippy]
+all = { level = "deny", priority = -1 }
+pedantic = { level = "deny", priority = -1 }
+cargo = { level = "deny", priority = -1 }
+unwrap_used = "deny"
+expect_used = "deny"
+dbg_macro = "deny"
+print_stderr = "deny"
+todo = "deny"

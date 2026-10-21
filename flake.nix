@@ -28,6 +28,7 @@
       imports = [
         ./nix/package.nix
         ./nix/shell.nix
+        ./nix/toolchain.nix
         ./nix/treefmt.nix
       ];
       flake.templates.default = {

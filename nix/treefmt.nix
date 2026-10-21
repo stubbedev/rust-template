@@ -1,7 +1,11 @@
 {inputs, ...}: {
   imports = [inputs.treefmt-nix.flakeModule];
 
-  perSystem = {lib, ...}: {
+  perSystem = {
+    lib,
+    rustToolchain,
+    ...
+  }: {
     treefmt = {
       projectRootFile = "flake.nix";
       programs = {
@@ -10,6 +14,7 @@
         just.enable = true;
         rustfmt = {
           enable = true;
+          package = rustToolchain;
           inherit ((lib.importTOML ../Cargo.toml).package) edition;
         };
         taplo.enable = true;

@@ -1,22 +1,14 @@
-{inputs, ...}: {
+{
   perSystem = {
+    cargoEnv,
     config,
     craneLib,
     pkgs,
     self',
     ...
-  }: let
-    nightly = (inputs.rust-overlay.lib.mkRustBin {} pkgs).selectLatestNightlyWith (toolchain:
-      toolchain.default.override {
-        extensions = [
-          "rust-analyzer"
-          "rust-src"
-          "rustc-codegen-cranelift-preview"
-        ];
-      });
-  in {
+  }: {
     devShells.default =
-      ((craneLib.overrideToolchain nightly).devShell.override {
+      (craneLib.devShell.override {
         mkShell = pkgs.mkShell.override {
           stdenv = pkgs.stdenvAdapters.useMoldLinker pkgs.clangStdenv;
         };
@@ -34,10 +26,7 @@
           gh
         ];
 
-        env = {
-          CARGO_UNSTABLE_CODEGEN_BACKEND = "true";
-          CARGO_PROFILE_DEV_CODEGEN_BACKEND = "cranelift";
-        };
+        env = cargoEnv;
       };
   };
 }

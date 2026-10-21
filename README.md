@@ -36,22 +36,28 @@ repository only sees tracked files.
 | `just fmt` | Format every file in place (`treefmt`) |
 | `just watch [job]` | Rerun a bacon job on every save (`clippy-all` by default, or `nextest`, `run`, ...) |
 
-Every dev tool (a nightly Rust toolchain with rust-analyzer, clippy and
-rustfmt, plus treefmt, cargo-nextest, cargo-shear, bacon, cargo-deny, just,
+## Toolchain
+
+Everything builds with nightly Rust: the dev shell, `nix build`, every
+`nix flake check` check (and so CI) and rustfmt under treefmt. The
+toolchain is defined once in `nix/toolchain.nix`: the latest nightly that
+ships the Cranelift component, chosen by rust-overlay and pinned through
+`flake.lock`, so Dependabot moves it forward. There is no stable fallback
+and no MSRV; `Cargo.toml` declares no `rust-version`.
+
+Every dev tool (that toolchain with rust-analyzer, clippy and rustfmt, plus
+treefmt, cargo-nextest, cargo-shear, bacon, cargo-deny, just,
 git and gh) comes from the flake: `direnv allow` on entry, or `nix develop`
 explicitly.
 
 ## Fast iteration
 
-- Dev builds compile with the Cranelift backend instead of LLVM, which is
-  much faster for unoptimised code. It needs nightly, so the dev shell's
-  toolchain is the latest nightly that ships Cranelift, chosen by
-  rust-overlay and pinned through `flake.lock` (Dependabot moves it
-  forward). The backend is set through `CARGO_PROFILE_DEV_CODEGEN_BACKEND`
-  in the shell only: `Cargo.toml` stays stable-compatible, and `nix build`
-  and `nix flake check` use the stable nixpkgs toolchain, so CI is the
-  stable reference. Nightly clippy can report lints stable does not have
-  yet; fix them or `#[expect]` them.
+- Dev-profile builds (the dev shell and the lint and test checks) compile
+  with the Cranelift backend instead of LLVM, which is much faster for
+  unoptimised code. `nix/toolchain.nix` sets it through
+  `CARGO_PROFILE_DEV_CODEGEN_BACKEND` rather than `cargo-features` in
+  `Cargo.toml`, which Dependabot's stable cargo could not parse. Release
+  builds keep LLVM.
 - The dev shell links with mold (`useMoldLinker` over `clangStdenv` in
   `nix/shell.nix`), which cuts most of an incremental rebuild's time. It
   applies only inside the shell; `nix build` and other machines keep the

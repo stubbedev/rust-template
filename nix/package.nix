@@ -1,16 +1,19 @@
-{inputs, ...}: {
+{
   perSystem = {
+    cargoEnv,
+    craneLib,
     lib,
     pkgs,
     ...
   }: let
     cargoToml = lib.importTOML ../Cargo.toml;
-    craneLib = inputs.crane.mkLib pkgs;
 
-    commonArgs = {
-      src = craneLib.cleanCargoSource ../.;
-      strictDeps = true;
-    };
+    commonArgs =
+      cargoEnv
+      // {
+        src = craneLib.cleanCargoSource ../.;
+        strictDeps = true;
+      };
 
     justRecipe = recipe: args:
       craneLib.mkCargoDerivation (commonArgs
@@ -28,10 +31,8 @@
           buildPhaseCargoCommand = "just ${recipe}";
         }
         // args
-        // {nativeBuildInputs = [pkgs.just] ++ args.nativeBuildInputs;});
+        // {nativeBuildInputs = [pkgs.just] ++ args.nativeBuildInputs or [];});
   in {
-    _module.args.craneLib = craneLib;
-
     packages.default = craneLib.buildPackage (commonArgs
       // {
         cargoArtifacts = craneLib.buildDepsOnly commonArgs;
@@ -47,7 +48,7 @@
       });
 
     checks = {
-      lint = justRecipe "lint" {nativeBuildInputs = [pkgs.clippy];};
+      lint = justRecipe "lint" {};
       deny = justRecipe "deny bans licenses sources" {nativeBuildInputs = [pkgs.cargo-deny];};
       shear = justRecipe "shear" {
         cargoArtifacts = null;

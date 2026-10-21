@@ -10,9 +10,14 @@ git init -b main
 nix flake init -t github:stubbedev/rust-template
 git add -A
 # rename the crate
-nix shell nixpkgs#sd -c sd 'rust-template' 'myproject' Cargo.toml Cargo.lock
+nix shell nixpkgs#sd -c sd 'rust-template' 'my-project' Cargo.toml Cargo.lock
+nix shell nixpkgs#sd -c sd 'rust_template' 'my_project' src/main.rs
 nix develop -c just check
 ```
+
+`src/lib.rs` holds the logic and its tests; `src/main.rs` only does I/O and
+calls into the library, which keeps the core pure and lets integration tests
+under `tests/` use it.
 
 `git add -A` comes before the first nix command because a flake in a git
 repository only sees tracked files.

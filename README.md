@@ -67,7 +67,10 @@ the crate's own code never rebuilds them.
 ## CI
 
 `.github/workflows/ci.yml` runs `nix flake check` on every pull request and
-push to `main`. `.github/workflows/security.yml` runs CodeQL (Rust and GitHub
+push to `main`. Jobs that need Nix use `.github/actions/setup-nix`, which
+installs it and restores the job's Nix store from the Actions cache, keyed on
+`flake.lock`, `Cargo.lock` and `nix/`, so crane's dependency build and the
+toolchain are not rebuilt or refetched on every run. `.github/workflows/security.yml` runs CodeQL (Rust and GitHub
 Actions), Grype and `just deny advisories` in the nix dev shell, also nightly,
 uploading CodeQL and Grype findings to code scanning; dependency review gates
 pull requests. Dependabot keeps the crates, the workflows and the flake inputs (and with

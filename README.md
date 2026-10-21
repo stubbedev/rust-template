@@ -23,10 +23,20 @@ just check
 | `just test` | `cargo nextest run` (profiles in `.config/nextest.toml`) |
 | `just build` | Compile-check every target |
 | `just fmt` | Format every Rust source in place |
+| `just watch [job]` | Rerun a bacon job on every save (`clippy-all` by default, or `nextest`, `run`, ...) |
 
 Every dev tool (the Rust toolchain the package builds with, rust-analyzer,
-clippy, rustfmt, cargo-nextest, cargo-audit, just, git, gh) comes from the flake: `direnv
+clippy, rustfmt, cargo-nextest, bacon, cargo-audit, just, git, gh) comes from the flake: `direnv
 allow` on entry, or `nix develop` explicitly.
+
+## Fast iteration
+
+- The dev shell links with mold (`useMoldLinker` over `clangStdenv` in
+  `nix/shell.nix`), which cuts most of an incremental rebuild's time. It
+  applies only inside the shell; `nix build` and other machines keep the
+  default linker.
+- `[profile.dev]` keeps only line tables as debuginfo: backtraces still
+  carry file and line, but compiling and linking emit far less.
 
 ## Nix
 

@@ -23,6 +23,10 @@ test:
 build:
     cargo build --locked
 
+# Rerun a bacon job on every save: clippy-all by default, or e.g. `just watch nextest`.
+watch job="clippy-all":
+    bacon {{job}}
+
 # Format every Rust source in place with rustfmt.
 fmt:
     cargo fmt

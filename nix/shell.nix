@@ -4,7 +4,9 @@
     self',
     ...
   }: {
-    devShells.default = pkgs.mkShell {
+    devShells.default = (pkgs.mkShell.override {
+      stdenv = pkgs.stdenvAdapters.useMoldLinker pkgs.clangStdenv;
+    }) {
       inputsFrom = [self'.packages.default];
 
       packages = with pkgs; [
@@ -13,6 +15,7 @@
         rustfmt
         cargo-audit
         cargo-nextest
+        bacon
         just
         git
         gh

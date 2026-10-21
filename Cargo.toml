@@ -8,6 +8,9 @@ license = "MIT"
 repository = "https://github.com/stubbedev/rust-template"
 publish = false
 
+[profile.dev]
+debug = "line-tables-only"
+
 [profile.release]
 lto = "thin"
 codegen-units = 1

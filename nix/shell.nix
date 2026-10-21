@@ -1,28 +1,30 @@
 {
   perSystem = {
+    craneLib,
     pkgs,
     self',
     ...
   }: {
-    devShells.default = (pkgs.mkShell.override {
-      stdenv = pkgs.stdenvAdapters.useMoldLinker pkgs.clangStdenv;
-    }) {
-      inputsFrom = [self'.packages.default];
+    devShells.default =
+      (craneLib.devShell.override {
+        mkShell = pkgs.mkShell.override {
+          stdenv = pkgs.stdenvAdapters.useMoldLinker pkgs.clangStdenv;
+        };
+      }) {
+        checks = self'.checks;
 
-      packages = with pkgs; [
-        rust-analyzer
-        clippy
-        rustfmt
-        cargo-deny
-        cargo-nextest
-        bacon
-        just
-        git
-        gh
-      ];
+        packages = with pkgs; [
+          rust-analyzer
+          cargo-deny
+          cargo-nextest
+          bacon
+          just
+          git
+          gh
+        ];
 
-      env.RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
-    };
+        env.RUST_SRC_PATH = "${pkgs.rustPlatform.rustLibSrc}";
+      };
 
     formatter = pkgs.alejandra;
   };

@@ -41,18 +41,27 @@ allow` on entry, or `nix develop` explicitly.
 
 ## Nix
 
-- `nix build` builds the package (`nix/package.nix`; the dev shell is
-  `nix/shell.nix`, both imported by `flake.nix`). Name, version and
-  description come from `Cargo.toml`, dependencies from `Cargo.lock`;
-  its tests run under nextest too.
+The package and its checks are built with [crane](https://github.com/ipetkov/crane)
+(`nix/package.nix`; the dev shell is `nix/shell.nix`, both imported by
+`flake.nix`). Dependencies build once into their own derivation, so editing
+the crate's own code never rebuilds them.
+
+- `nix build` builds the release package; name, version and description
+  come from `Cargo.toml`, dependencies from `Cargo.lock`
+- `nix flake check` runs `just fmt-check`, `just lint`, `just test` (nextest's
+  `ci` profile) and `just deny bans licenses sources` in the sandbox, so the
+  justfile stays the one definition of each gate. Advisories need network
+  access the sandbox lacks, so the security workflow checks them instead.
 - `nix run` runs it
-- `nix fmt` formats the nix files with alejandra
+- `nix fmt -- flake.nix nix` formats the nix files with alejandra
 
 ## CI
 
-`.github/workflows/security.yml` runs CodeQL (Rust and GitHub Actions), Grype and
-`just deny` in the nix dev shell, uploading CodeQL and Grype findings to code scanning; dependency
-review gates pull requests. Dependabot keeps the crates and the workflows current.
+`.github/workflows/ci.yml` runs `nix flake check` on every pull request and
+push to `main`. `.github/workflows/security.yml` runs CodeQL (Rust and GitHub
+Actions), Grype and `just deny advisories` in the nix dev shell, also nightly,
+uploading CodeQL and Grype findings to code scanning; dependency review gates
+pull requests. Dependabot keeps the crates and the workflows current.
 
 ## Linting
 

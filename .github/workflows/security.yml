@@ -56,7 +56,7 @@ jobs:
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
 
-  cargo-deny:
+  cargo-deny-advisories:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -65,8 +65,8 @@ jobs:
         with:
           persist-credentials: false
       - uses: cachix/install-nix-action@448cde739abec1eaf0646249e3d25bb8d9bc7702 # v31.11.2
-      - name: Run cargo-deny
-        run: nix develop --command just deny
+      - name: Check advisories
+        run: nix develop --command just deny advisories
 
   dependency-review:
     runs-on: ubuntu-latest

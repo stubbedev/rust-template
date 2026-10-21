@@ -15,9 +15,9 @@ fmt-check:
 lint:
     cargo clippy --all-targets --locked -- -D warnings
 
-# Check advisories, licences, duplicate versions and sources against deny.toml.
-deny:
-    cargo deny --locked check
+# Check deny.toml's policy: every check by default, or a subset, e.g. `just deny advisories`.
+deny *checks:
+    cargo deny --locked check {{checks}}
 
 # Run the test suite with cargo-nextest; profiles live in .config/nextest.toml.
 test:

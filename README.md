@@ -98,7 +98,8 @@ passes `-D warnings`, so every finding fails the build. The extra lints:
 `clippy.toml` lifts the panic, unwrap, expect, indexing and `dbg!` lints
 inside tests, where panicking is how a test fails. `unsafe_code` is forbidden.
 
-`deny.toml` holds the dependency policy `just deny` enforces: no known
+`deny.toml` holds the dependency policy `just deny` enforces, over the
+dependency graph of the Linux and macOS targets in `[graph] targets` only: no known
 advisories or yanked crates, an allowlist of licences, crates.io as the only
 source, no wildcard requirements and no duplicate crate versions.
 Duplicates are checked there instead of by clippy's `multiple_crate_versions`

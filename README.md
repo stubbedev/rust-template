@@ -27,7 +27,7 @@ just check
 | `just watch [job]` | Rerun a bacon job on every save (`clippy-all` by default, or `nextest`, `run`, ...) |
 
 Every dev tool (the Rust toolchain the package builds with, rust-analyzer,
-clippy, rustfmt, cargo-nextest, bacon, cargo-deny, just, git, gh) comes from the flake: `direnv
+clippy, rustfmt, treefmt, cargo-nextest, bacon, cargo-deny, just, git, gh) comes from the flake: `direnv
 allow` on entry, or `nix develop` explicitly.
 
 ## Fast iteration
@@ -64,7 +64,8 @@ the crate's own code never rebuilds them.
 push to `main`. `.github/workflows/security.yml` runs CodeQL (Rust and GitHub
 Actions), Grype and `just deny advisories` in the nix dev shell, also nightly,
 uploading CodeQL and Grype findings to code scanning; dependency review gates
-pull requests. Dependabot keeps the crates and the workflows current.
+pull requests. Dependabot keeps the crates, the workflows and the flake inputs (and with
+them the toolchain and every dev tool) current.
 
 ## Linting
 

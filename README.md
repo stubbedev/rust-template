@@ -41,6 +41,9 @@ allow` on entry, or `nix develop` explicitly.
   `nix/shell.nix`), which cuts most of an incremental rebuild's time. It
   applies only inside the shell; `nix build` and other machines keep the
   default linker.
+- `[profile.release]` aborts on panic instead of unwinding: smaller and
+  faster binaries, at the cost of `catch_unwind` and of `Drop` running
+  during a panic. Tests are unaffected; they always unwind.
 - `[profile.dev]` keeps only line tables as debuginfo: backtraces still
   carry file and line, but compiling and linking emit far less.
 

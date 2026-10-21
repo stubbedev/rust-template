@@ -29,28 +29,42 @@ repository only sees tracked files.
 | `just check` | Every release gate in order: fmt-check, lint, deny, shear, test, build |
 | `just fmt-check` | Fail when any file is not formatted (`treefmt --ci`) |
 | `just lint` | `cargo clippy` against the strict levels in `Cargo.toml` |
-| `just deny` | `cargo deny check` against `deny.toml` |
+| `just deny [checks]` | `cargo deny check` against `deny.toml`: every check, or a subset such as `advisories` |
 | `just shear` | `cargo shear`: fail on dependencies no target uses |
 | `just test` | `cargo nextest run` (profiles in `.config/nextest.toml`) |
 | `just build` | Compile-check every target |
 | `just fmt` | Format every file in place (`treefmt`) |
 | `just watch [job]` | Rerun a bacon job on every save (`clippy-all` by default, or `nextest`, `run`, ...) |
 
-Every dev tool (the Rust toolchain the package builds with, rust-analyzer,
-clippy, rustfmt, treefmt, cargo-nextest, cargo-shear, bacon, cargo-deny, just, git, gh) comes from the flake: `direnv
-allow` on entry, or `nix develop` explicitly.
+Every dev tool (a nightly Rust toolchain with rust-analyzer, clippy and
+rustfmt, plus treefmt, cargo-nextest, cargo-shear, bacon, cargo-deny, just,
+git and gh) comes from the flake: `direnv allow` on entry, or `nix develop`
+explicitly.
 
 ## Fast iteration
 
+- Dev builds compile with the Cranelift backend instead of LLVM, which is
+  much faster for unoptimised code. It needs nightly, so the dev shell's
+  toolchain is the latest nightly that ships Cranelift, chosen by
+  rust-overlay and pinned through `flake.lock` (Dependabot moves it
+  forward). The backend is set through `CARGO_PROFILE_DEV_CODEGEN_BACKEND`
+  in the shell only: `Cargo.toml` stays stable-compatible, and `nix build`
+  and `nix flake check` use the stable nixpkgs toolchain, so CI is the
+  stable reference. Nightly clippy can report lints stable does not have
+  yet; fix them or `#[expect]` them.
 - The dev shell links with mold (`useMoldLinker` over `clangStdenv` in
   `nix/shell.nix`), which cuts most of an incremental rebuild's time. It
   applies only inside the shell; `nix build` and other machines keep the
   default linker.
-- `[profile.release]` aborts on panic instead of unwinding: smaller and
-  faster binaries, at the cost of `catch_unwind` and of `Drop` running
-  during a panic. Tests are unaffected; they always unwind.
 - `[profile.dev]` keeps only line tables as debuginfo: backtraces still
   carry file and line, but compiling and linking emit far less.
+
+## Profiles
+
+`[profile.release]` uses thin LTO, one codegen unit, stripped symbols, and
+aborts on panic instead of unwinding: smaller and faster binaries, at the
+cost of `catch_unwind` and of `Drop` running during a panic. Tests are
+unaffected; they always unwind.
 
 ## Nix
 

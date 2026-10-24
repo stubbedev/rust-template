@@ -66,8 +66,9 @@ explicitly.
   (`-Zthreads=8` through `CARGO_BUILD_RUSTFLAGS` in `nix/toolchain.nix`);
   the front end is single-threaded otherwise. A `RUSTFLAGS` set in the
   environment replaces it.
-- `[profile.dev]` keeps only line tables as debuginfo: backtraces still
-  carry file and line, but compiling and linking emit far less.
+- `[profile.dev]` keeps only line tables as debuginfo for the workspace's
+  own crates and none for dependencies: backtraces still carry file and
+  line in your code, but compiling and linking emit far less.
 
 ## Profiles
 

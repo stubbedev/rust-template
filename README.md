@@ -58,10 +58,10 @@ explicitly.
   `CARGO_PROFILE_DEV_CODEGEN_BACKEND` rather than `cargo-features` in
   `Cargo.toml`, which Dependabot's stable cargo could not parse. Release
   builds keep LLVM.
-- The dev shell links with mold (`useMoldLinker` over `clangStdenv` in
-  `nix/shell.nix`), which cuts most of an incremental rebuild's time. It
-  applies only inside the shell; `nix build` and other machines keep the
-  default linker.
+- Every build on Linux links with mold, which cuts most of an incremental
+  rebuild's time: crane's `stdenvSelector` in `nix/toolchain.nix` picks
+  `useMoldLinker` over `clangStdenv`, and the dev shell reuses that stdenv.
+  macOS keeps clang's default linker, since mold cannot emit Mach-O.
 - `[profile.dev]` keeps only line tables as debuginfo: backtraces still
   carry file and line, but compiling and linking emit far less.
 

@@ -10,7 +10,7 @@
     devShells.default =
       (craneLib.devShell.override {
         mkShell = pkgs.mkShell.override {
-          stdenv = pkgs.stdenvAdapters.useMoldLinker pkgs.clangStdenv;
+          stdenv = craneLib.stdenvSelector pkgs;
         };
       }) {
         checks = self'.checks;

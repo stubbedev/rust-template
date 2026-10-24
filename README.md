@@ -62,6 +62,10 @@ explicitly.
   rebuild's time: crane's `stdenvSelector` in `nix/toolchain.nix` picks
   `useMoldLinker` over `clangStdenv`, and the dev shell reuses that stdenv.
   macOS keeps clang's default linker, since mold cannot emit Mach-O.
+- Every build runs rustc's parallel front end with eight threads
+  (`-Zthreads=8` through `CARGO_BUILD_RUSTFLAGS` in `nix/toolchain.nix`);
+  the front end is single-threaded otherwise. A `RUSTFLAGS` set in the
+  environment replaces it.
 - `[profile.dev]` keeps only line tables as debuginfo: backtraces still
   carry file and line, but compiling and linking emit far less.
 

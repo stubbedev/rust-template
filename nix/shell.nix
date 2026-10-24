@@ -3,6 +3,7 @@
     cargoEnv,
     config,
     craneLib,
+    lib,
     pkgs,
     self',
     ...
@@ -20,13 +21,14 @@
           cargo-deny
           cargo-nextest
           cargo-shear
+          sccache
           bacon
           just
           git
           gh
         ];
 
-        env = cargoEnv;
+        env = cargoEnv // {RUSTC_WRAPPER = lib.getExe pkgs.sccache;};
       };
   };
 }

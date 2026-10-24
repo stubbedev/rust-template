@@ -69,6 +69,11 @@ explicitly.
 - `[profile.dev]` keeps only line tables as debuginfo for the workspace's
   own crates and none for dependencies: backtraces still carry file and
   line in your code, but compiling and linking emit far less.
+- The dev shell wraps rustc in sccache (`RUSTC_WRAPPER`), which caches
+  compiled dependencies across `cargo clean` and across projects. Workspace
+  crates compile incrementally, which sccache does not cache, so it passes
+  them straight to rustc. The Nix checks and CI do not use it: crane already
+  builds dependencies once into their own derivation.
 
 ## Profiles
 
